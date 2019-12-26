@@ -15,7 +15,7 @@ const Link = require("./resolvers/Link");
 const Vote = require("./resolvers/Vote");
 
 const schema = makePrismaSchema({
-  types: [Query, Mutation, Link, User, Vote],
+  types: [Query, Mutation, Subscription, Link, User, Vote],
 
   prisma: {
     datamodelInfo,
