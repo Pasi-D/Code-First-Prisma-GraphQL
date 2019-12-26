@@ -1,4 +1,9 @@
 import { getUserId, hashPwd, createNewToken, validatePassword } from "../util/adapter";
+import { prismaObjectType } from "nexus-prisma";
+import { stringArg, objectType, idArg } from "nexus";
+import { User } from "./User";
+import { Link } from "./Link";
+import { Vote } from "./Vote";
 
 const signUp = async (parent, args, context, info) => {
  const password = await hashPwd(args.password);
@@ -57,12 +62,69 @@ const vote = async (parent, args, context, info) => {
  return context.prisma.createVote({
   user: { connect: { id: userId } },
   link: { connect: { id: args.linkId } }
- })
+ });
 };
 
+const Mutation = prismaObjectType({
+ name: "Mutation",
+ definition(t) {
+  t.field("signUp", {
+   type: AuthPayload,
+   args: {
+    email: stringArg(),
+    name: stringArg({ nullable: false }),
+    password: stringArg({ nullable: false })
+   },
+   resolve: (root, args, context, info) => {
+    return signUp(root, args, context, info);
+   }
+  })
+
+  t.field("login", {
+   type: AuthPayload,
+   args: {
+    email: stringArg({ required: true }),
+    password: stringArg({ nullable: false })
+   },
+   resolve: (root, args, context, info) => {
+    return login(root, args, context, info);
+   }
+  })
+
+  t.field("post", {
+   type: Link,
+   args: {
+    url: stringArg({ required: true }),
+    description: stringArg({ required: true })
+   },
+   resolve: (root, args, context, info) => {
+    return post(root, args, context, info);
+   } 
+  })
+
+  t.field("vote", {
+   type: Vote,
+   args: {
+    linkId: idArg()
+   },
+   resolve: (root, args, context, info) => {
+    return vote(root, args, context, info);
+   }
+  })
+ }
+})
+
+const AuthPayload = objectType({
+ name: "AuthPayload",
+ definition(t) {
+  t.string("token", { description: "Token generated from server" })
+  t.field("user", {
+   type: User
+  })
+ }
+})
+
 module.exports = {
- signUp,
- login,
- post,
- vote
+ Mutation,
+ AuthPayload
 }

@@ -11,3 +11,10 @@ databaseType: document
 generate:
   - generator: typescript-client
     output: ../src/generated/prisma-client/
+
+# Ensures Prisma client is re-generated after a datamodel change.
+# Runs the codegen tool from nexus-prisma
+hooks:
+  post-deploy:
+    - prisma generate
+    - npx nexus-prisma-generate --client ./src/generated/prisma-client --output ./src/generated/nexus-prisma

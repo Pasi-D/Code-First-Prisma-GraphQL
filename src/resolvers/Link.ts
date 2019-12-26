@@ -1,12 +1,27 @@
-const postedBy = (parent, args, context) => {
- return context.prisma.link({ id: parent.id }).postedBy();
-};
+import { prismaObjectType } from "nexus-prisma";
+import { User } from "./User";
+import { Vote } from "./Vote";
 
-const votes = (parent, args, context) => {
- return context.prisma.link({ id: parent.id }).votes();
-};
+export const Link = prismaObjectType({
+ name: "Link",
+ description: "Links generated",
+ definition(t) {
+  t.prismaFields(["id", "createdAt", "updatedAt", "description", "url"])
+  t.field("postedBy", {
+    type: User,
+    resolve: (parent, args, context, info) => {
+      return context.prisma.link({ id: parent.id }).postedBy();
+    }
+  })
+  t.list.field("votes", {
+    type: Vote,
+    resolve: (parent, args, context, info) => {
+      return context.prisma.link({ id: parent.id }).votes();
+    }
+  })
+ }
+});
 
 module.exports = {
- postedBy,
- votes
+ Link
 };
