@@ -11,16 +11,14 @@ export const User = prismaObjectType({
   t.string("email")
   t.list.field("links", { 
    type: Link,
-   resolve: (parent, args, context, info) => {
-    const resolution = context.prisma.user({ id: parent.id }).links();
-    return resolution;
+   resolve: (parent, args, { prisma }, info) => {
+    return prisma.user({ id: parent.id }).links();
    }
   })
-  t.list.field("votes", { 
+  t.list.field("votes", {
    type: Vote,
-   resolve: (parent, args, context, info) => {
-    const resolution = context.prisma.user({ id: parent.id }).votes();
-    return resolution
+   resolve: (parent, args, { prisma }, info) => {
+    return prisma.user({ id: parent.id }).votes();
    }
   })
  }

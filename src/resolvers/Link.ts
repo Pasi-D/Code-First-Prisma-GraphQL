@@ -9,14 +9,14 @@ export const Link = prismaObjectType({
   t.prismaFields(["id", "createdAt", "updatedAt", "description", "url"])
   t.field("postedBy", {
     type: User,
-    resolve: (parent, args, context, info) => {
-      return context.prisma.link({ id: parent.id }).postedBy();
+    resolve: (parent, args, { prisma }, info) => {
+      return prisma.link({ id: parent.id }).postedBy();
     }
   })
   t.list.field("votes", {
     type: Vote,
-    resolve: (parent, args, context, info) => {
-      return context.prisma.link({ id: parent.id }).votes();
+    resolve: (parent, args, { prisma }, info) => {
+      return prisma.link({ id: parent.id }).votes();
     }
   })
  }

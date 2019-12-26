@@ -12,20 +12,20 @@ const Query = queryType({
         first: intArg({ default: 10 }),
         orderBy: arg({ type: LinkOrderByInput, required: false })
       },
-      resolve: async (root, { filter, skip, first, orderBy }, context, info) => {
+      resolve: async (root, { filter, skip, first, orderBy }, { prisma }, info) => {
         const where = filter ? {
           AND: [
             { description_contains: filter },
             { url_contains: filter }
           ]
         } : {};
-        const links = await context.prisma.links({
+        const links = await prisma.links({
           where,
           skip,
           first,
           orderBy
         });
-        const count = await context.prisma.linksConnection({ where }).aggregate().count();
+        const count = await prisma.linksConnection({ where }).aggregate().count();
         // This is the weird return statement that confuses me.
         return [
           {
