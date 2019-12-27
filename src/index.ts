@@ -1,11 +1,10 @@
 import { ApolloServer } from "apollo-server";
-import { importSchema } from "graphql-import";
 import { prisma } from "./generated/prisma-client"; 
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const typeDefs = importSchema("./src/schema/schema.graphql");
+const typeDefs = require("./schema/schema")
 
 const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");

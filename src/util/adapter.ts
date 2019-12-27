@@ -4,7 +4,9 @@ import * as bcrypt from "bcryptjs";
 const APP_SECRET = process.env.APP_SECRET;
 
 export const getUserId = (context: any) => {
- const Authorization = context.request.get('Authorization');
+ // context.request works in case of graphql-yoga
+ // context.req works in case of apollo-server
+ const Authorization = context.req.get('Authorization');
  if (Authorization) {
   const token = Authorization.replace('Bearer ', '');
   const { userId } = jwt.verify(token, APP_SECRET);
