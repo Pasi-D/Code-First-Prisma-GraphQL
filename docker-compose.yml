@@ -14,8 +14,8 @@ services:
         databases:
           default:
             connector: mongo
-            uri: 'mongodb://prisma:prisma@mongo'
-  mongo:
+            uri: 'mongodb://prisma:prisma@mongohackernode:27017'
+  mongohackernode:
     image: mongo:3.6
     container_name: hacker_node_mongodb
     restart: always
@@ -28,6 +28,6 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongo:/var/lib/mongo
+      - mongohackernode:/var/lib/mongo
 volumes:
-  mongo:
+  mongohackernode:
